@@ -6,6 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { X } from "lucide-react";
 import { FcGoogle } from "react-icons/fc";
+import { supabase } from '@/lib/supabaseClient';
+
 
 const AuthModal = ({
   setShowLoginModal,
@@ -26,6 +28,14 @@ const AuthModal = ({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [setShowLoginModal]);
 
+  const signInWithGoogle = async () => {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: { redirectTo: window.location.origin },
+    });
+    return { error };
+  };
+
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
       <div ref={modalRef} className="relative">
@@ -45,7 +55,7 @@ const AuthModal = ({
             </CardTitle>
           </CardHeader>
           <CardContent className="flex flex-col gap-4">
-            <Button variant="outline" className="w-full flex items-center gap-2">
+            <Button variant="outline" className="w-full flex items-center gap-2" onClick={signInWithGoogle}>
               <FcGoogle className="h-5 w-5" />
               Continue with Google
             </Button>
