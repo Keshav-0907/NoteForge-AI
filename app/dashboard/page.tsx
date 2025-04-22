@@ -11,9 +11,6 @@ const Dashboard = () => {
 
   const notesState = useSelector((state: RootState) => state);
 
-  console.log("notesState", notesState);
-
-
   return (
     <div className='bg-[#121212] h-full w-full p-2 flex flex-col gap-6'>
 
