@@ -30,6 +30,7 @@ const useAuth = () => {
             if (error) throw error;
             setSession(null);
             console.log("Logged out successfully");
+            window.location.pathname = "/";
         }
         catch (err: any) {
             setError(err.message);
