@@ -8,12 +8,13 @@ import { X } from "lucide-react";
 import { FcGoogle } from "react-icons/fc";
 import { supabase } from '@/lib/supabaseClient';
 
-const AuthModal = ({ setShowLoginModal }: { setShowLoginModal: (val: boolean) => void }) => {
+
+const AuthModal = ({
+  setShowLoginModal,
+}: {
+  setShowLoginModal: (val: boolean) => void;
+}) => {
   const [mode, setMode] = useState<"login" | "signup">("login");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [name, setName] = useState("");
-  const [errorMsg, setErrorMsg] = useState<{ email?: string; password?: string; name?: string }>({});
   const modalRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -33,26 +34,6 @@ const AuthModal = ({ setShowLoginModal }: { setShowLoginModal: (val: boolean) =>
       options: { redirectTo: window.location.origin },
     });
     return { error };
-  };
-
-  const handleAuth = async () => {
-    setErrorMsg({});
-    if (!email) setErrorMsg((prev) => ({ ...prev, email: "Email is required." }));
-    if (!password) setErrorMsg((prev) => ({ ...prev, password: "Password is required." }));
-    if (mode === "signup" && !name) setErrorMsg((prev) => ({ ...prev, name: "Name is required." }));
-    if (!email || !password || (mode === "signup" && !name)) return;
-
-    if (mode === "login") {
-      const { error } = await supabase.auth.signInWithPassword({ email, password });
-      if (error) setErrorMsg((prev) => ({ ...prev, email: error.message }));
-    } else {
-      const { error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: { data: { name } }
-      });
-      if (error) setErrorMsg((prev) => ({ ...prev, email: error.message }));
-    }
   };
 
   return (
@@ -85,22 +66,11 @@ const AuthModal = ({ setShowLoginModal }: { setShowLoginModal: (val: boolean) =>
               <span className="flex-grow h-px bg-muted-foreground/20" />
             </div>
 
-            {mode === "signup" && (
-              <div className="flex flex-col gap-1">
-                <Input placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} />
-                {errorMsg.name && <p className="text-red-500 text-xs">{errorMsg.name}</p>}
-              </div>
-            )}
-            <div className="flex flex-col gap-1">
-              <Input placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
-              {errorMsg.email && <p className="text-red-500 text-xs">{errorMsg.email}</p>}
-            </div>
-            <div className="flex flex-col gap-1">
-              <Input placeholder="Password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-              {errorMsg.password && <p className="text-red-500 text-xs">{errorMsg.password}</p>}
-            </div>
+            {mode === "signup" && <Input placeholder="Name" />}
+            <Input placeholder="Email" />
+            <Input placeholder="Password" type="password" />
 
-            <Button className="w-full" onClick={handleAuth}>
+            <Button className="w-full">
               {mode === "login" ? "Login" : "Sign Up"}
             </Button>
 
