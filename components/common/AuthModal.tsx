@@ -7,6 +7,10 @@ import { Input } from "@/components/ui/input";
 import { X } from "lucide-react";
 import { FcGoogle } from "react-icons/fc";
 import { supabase } from '@/lib/supabaseClient';
+import { Label } from "../ui/label";
+import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
+
 
 
 const AuthModal = ({
@@ -16,6 +20,11 @@ const AuthModal = ({
 }) => {
   const [mode, setMode] = useState<"login" | "signup">("login");
   const modalRef = useRef<HTMLDivElement>(null);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -37,6 +46,51 @@ const AuthModal = ({
     });
     return { error };
   };
+
+  const createNewUserWithEmail = async () => {
+    console.log("Creating new user with email");
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: {
+          first_name: name,
+        },
+      },
+    })
+
+    if (error) {
+      setError(error.message);
+      console.log("Error creating new user: ", error.message);
+    }
+
+    if (data) {
+      setError(null);
+      toast.success("User created successfully");
+      setMode("login");
+      console.log("User created successfully: ", data);
+    }
+  }
+
+  const loginWithEmail = async () => {
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password
+    });
+  
+    if (error) {
+      setError(error.message);
+      console.log("Error logging in: ", error.message);
+    }
+  
+    if (data?.user) {
+      setError(null);
+      toast.success("Logged in successfully");
+      setShowLoginModal(false);
+      window.location.pathname = "/dashboard";
+    }
+  };
+  
 
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
@@ -68,11 +122,19 @@ const AuthModal = ({
               <span className="flex-grow h-px bg-muted-foreground/20" />
             </div>
 
-            {mode === "signup" && <Input placeholder="Name" />}
-            <Input placeholder="Email" />
-            <Input placeholder="Password" type="password" />
+            {mode === "signup" && <Input placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} />}
+            <Input placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
+            <Input placeholder="Password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
 
-            <Button className="w-full">
+            {
+              error && (
+                <div className="text-red-500 text-sm">
+                  {error}
+                </div>
+              )
+            }
+
+            <Button className="w-full" onClick={() => { mode === "login" ? loginWithEmail() : createNewUserWithEmail() }}>
               {mode === "login" ? "Login" : "Sign Up"}
             </Button>
 

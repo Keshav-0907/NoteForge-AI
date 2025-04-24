@@ -24,10 +24,6 @@ const Dashboard = () => {
   const normalNotes = notes?.filter((note) => !note.isPinned && !note.isArchived);
 
   console.log("Pinned Notes: ", pinnedNotes);
-
-
-
-
   return (
     <div className='bg-[#121212] h-full w-full p-2 flex flex-col gap-6 relative'>
 
