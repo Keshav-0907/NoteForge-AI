@@ -86,9 +86,9 @@ const Dashboard = () => {
             )}
           </div>
         ) : (
-          <div className="flex flex-col items-center justify-center h-full">
+          <div className="flex flex-col items-center justify-center h-full gap-2">
             <Label className="text-lg font-semibold">No notes found</Label>
-            <Separator className="my-2 w-1/2" />
+            {/* <Separator className="my-2 w-1/2" /> */}
             <Label className="text-sm text-gray-500">Create your first note</Label>
           </div>
         )

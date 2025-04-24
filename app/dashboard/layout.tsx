@@ -15,7 +15,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   }, [session, loading])
 
   return (
-    <div className="flex w-screen h-[91vh]">
+    <div className="flex w-screen h-[91dvh]">
       <div className="md:flex hidden">
         <Sidebar />
       </div>

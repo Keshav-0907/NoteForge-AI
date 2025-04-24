@@ -46,7 +46,7 @@ const Header = () => {
                                 <DropdownMenuContent className=''>
                                     <DropdownMenuLabel> Hi {session?.user?.identities?.[0]?.identity_data?.name} </DropdownMenuLabel>
                                     <DropdownMenuSeparator />
-                                    <DropdownMenuItem>Pinned Notes</DropdownMenuItem>
+                                    {/* <DropdownMenuItem>Pinned Notes</DropdownMenuItem> */}
                                     <DropdownMenuItem className='cursor-pointer' onClick={logOut}>Log Out</DropdownMenuItem>
                                 </DropdownMenuContent>
                             </DropdownMenu>
